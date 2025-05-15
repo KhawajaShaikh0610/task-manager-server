@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { default: mongoose } = require("mongoose");
 
 const taskSchema = Joi.object({
   title: Joi.string().min(3).max(100).required().messages({
@@ -17,6 +18,9 @@ const taskSchema = Joi.object({
         "Status must be one of 'pending', 'in-progress', or 'completed' or 'hold'",
       "string.empty": "Status is required",
     }),
+  userId: Joi.string().required().messages({
+    "any.required": "User ID is required",
+  }),
 });
 
 module.exports = { taskSchema };
