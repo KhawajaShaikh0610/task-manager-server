@@ -19,7 +19,6 @@ exports.createTask = async (req, res) => {
 
 exports.getTasks = async (req, res) => {
   try {
-    // Get userId from params and validate
     const userId = req.params.userId;
     if (!userId) {
       return res.status(400).json({
@@ -27,20 +26,18 @@ exports.getTasks = async (req, res) => {
       });
     }
 
-    // Get pagination parameters
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    // Validate pagination parameters
     if (page < 1 || limit < 1) {
       return res.status(400).json({
         message: "Page and limit must be positive integers",
       });
     }
 
-    // Count total documents and fetch paginated results
     const totalTasks = await Task.countDocuments({ userId });
     const tasks = await Task.find({ userId })
+      .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
 
